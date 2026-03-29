@@ -1,0 +1,16 @@
+{
+  "name": "techmujin-planning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "vivliostyle build",
+    "preview": "vivliostyle preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vivliostyle/cli": "^10.3.1"
+  }
+}
