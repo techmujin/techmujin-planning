@@ -27,4 +27,5 @@ module.exports = {
     { path: "docs/20-appendix.md", title: "付録" },
   ],
   output: "output.pdf",
+  theme: "themes/custom.css",
 };
