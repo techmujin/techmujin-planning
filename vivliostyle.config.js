@@ -28,4 +28,7 @@ module.exports = {
   ],
   output: "output.pdf",
   theme: "themes/custom.css",
+  toc: {
+    title: "目次",
+  },
 };
