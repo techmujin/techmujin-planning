@@ -5,6 +5,7 @@ module.exports = {
   size: "A4",
   entry: [
     { path: "docs/00-cover.md", title: "表紙" },
+    { rel: "contents" },
     { path: "docs/01-background.md", title: "はじめに（背景・問題意識）" },
     { path: "docs/02-purpose.md", title: "目的" },
     { path: "docs/03-concept.md", title: "コンセプト" },
