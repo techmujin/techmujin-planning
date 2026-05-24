@@ -3,3 +3,23 @@
     content: counter(page);
   }
 }
+
+/* 目次 */
+#toc ol {
+  list-style: none;
+  font-size: larger;
+  line-height: 180%;
+}
+
+#toc li {
+  padding-right: 3em;
+}
+
+#toc a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#toc a::after {
+  content: leader(dotted) target-counter(attr(href url), page);
+}
