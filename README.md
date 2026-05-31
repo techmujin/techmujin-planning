@@ -25,6 +25,14 @@ pnpm build
 
 `techmujin_planning.pdf` が生成されます。
 
+### GitHub Actions での自動ビルド
+
+`main` ブランチに push されると GitHub Actions が `pnpm build` を実行し、生成された `techmujin_planning.pdf` を Release に公開します。
+
+最新版の PDF は `latest-pdf` タグの Release からダウンロードできます。
+
+Pull Request 作成時・更新時にも GitHub Actions が PDF をビルドし、workflow run の Artifact から対象ブランチ版 PDF をダウンロードできます。PR には別 workflow から最新 run へのリンクを含む bot コメントも自動で付きます。
+
 ### プレビュー
 
 ```bash
