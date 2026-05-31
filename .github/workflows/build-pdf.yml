@@ -51,6 +51,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build PDF
+        env:
+          VIVLIOSTYLE_THEME: ${{ github.event_name == 'pull_request' && 'themes/pr-draft.css' || 'themes/custom.css' }}
         run: pnpm build
 
       - name: Upload workflow artifact

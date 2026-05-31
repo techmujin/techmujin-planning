@@ -28,7 +28,7 @@ module.exports = {
     { path: "docs/20-appendix.md", title: "付録" },
   ],
   output: "techmujin_planning.pdf",
-  theme: "themes/custom.css",
+  theme: process.env.VIVLIOSTYLE_THEME || "themes/custom.css",
   toc: {
     title: "目次",
   },

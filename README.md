@@ -33,6 +33,8 @@ pnpm build
 
 Pull Request 作成時・更新時にも GitHub Actions が PDF をビルドし、workflow run の Artifact から対象ブランチ版 PDF をダウンロードできます。PR には別 workflow から最新 run へのリンクを含む bot コメントも自動で付きます。
 
+PR で生成される PDF には「下書き」の透かしが入り、main への push で公開される PDF には入りません。
+
 ### プレビュー
 
 ```bash
