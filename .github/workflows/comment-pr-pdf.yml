@@ -1,0 +1,73 @@
+name: Comment PR PDF Link
+
+on:
+  workflow_run:
+    workflows:
+      - Build PDF
+    types:
+      - completed
+
+permissions:
+  actions: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  comment:
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Comment PR with workflow run link
+        uses: actions/github-script@v7
+        env:
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          ARTIFACT_NAME: techmujin-planning-pdf-pull_request-${{ github.event.workflow_run.head_sha }}
+        with:
+          script: |
+            const marker = '<!-- techmujin-planning-pdf-comment -->';
+            const pullRequest = context.payload.workflow_run.pull_requests?.[0];
+
+            if (!pullRequest?.number) {
+              core.info('No pull request associated with this workflow run.');
+              return;
+            }
+
+            const issue_number = pullRequest.number;
+            const body = [
+              marker,
+              '最新版の PDF をダウンロードできます。',
+              '',
+              `- Workflow run: ${process.env.RUN_URL}`,
+              `- Artifact: ${process.env.ARTIFACT_NAME}`,
+              '- 上の run ページを開くと Artifact から PDF を取得できます。'
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) =>
+              comment.user?.type === 'Bot' && comment.body?.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+                body,
+              });
+            }
