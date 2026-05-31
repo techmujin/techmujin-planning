@@ -23,7 +23,7 @@ pnpm install
 pnpm build
 ```
 
-`output.pdf` が生成されます。
+`techmujin_planning.pdf` が生成されます。
 
 ### プレビュー
 

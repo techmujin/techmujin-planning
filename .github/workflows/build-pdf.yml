@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: techmujin-planning-pdf
-          path: output.pdf
+          path: techmujin_planning.pdf
 
       - name: Update release tag
         run: |
@@ -68,7 +68,7 @@ jobs:
           name: Latest PDF
           body: |
             main ブランチの最新コミットから自動生成した PDF です。
-          files: output.pdf
+          files: techmujin_planning.pdf
           fail_on_unmatched_files: true
           generate_release_notes: false
           append_body: false

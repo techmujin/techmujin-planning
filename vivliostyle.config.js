@@ -27,7 +27,7 @@ module.exports = {
     { path: "docs/19-contact.md", title: "お問い合わせ" },
     { path: "docs/20-appendix.md", title: "付録" },
   ],
-  output: "output.pdf",
+  output: "techmujin_planning.pdf",
   theme: "themes/custom.css",
   toc: {
     title: "目次",
