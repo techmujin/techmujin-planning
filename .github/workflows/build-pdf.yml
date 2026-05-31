@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - main
@@ -50,16 +52,29 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Resolve PDF version
+        id: meta
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            VERSION="${GITHUB_REF_NAME}"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "pdf_output=techmujin_planning-${VERSION}.pdf" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=" >> "$GITHUB_OUTPUT"
+            echo "pdf_output=techmujin_planning.pdf" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build PDF
         env:
           VIVLIOSTYLE_THEME: ${{ github.event_name == 'pull_request' && 'themes/pr-draft.css' || 'themes/custom.css' }}
+          PDF_OUTPUT_FILE: ${{ steps.meta.outputs.pdf_output }}
         run: pnpm build
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: techmujin-planning-pdf-${{ github.event_name }}-${{ github.sha }}
-          path: techmujin_planning.pdf
+          path: ${{ steps.meta.outputs.pdf_output }}
 
       - name: Upload PR artifact summary
         if: github.event_name == 'pull_request'
@@ -71,23 +86,15 @@ jobs:
             echo "- PR checks from this workflow contain the downloadable file."
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Update release tag
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git tag -f latest-pdf "${GITHUB_SHA}"
-          git push origin refs/tags/latest-pdf --force
-
       - name: Publish release asset
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest-pdf
-          name: Latest PDF
+          tag_name: ${{ github.ref_name }}
+          name: ${{ steps.meta.outputs.version }}
           body: |
-            main ブランチの最新コミットから自動生成した PDF です。
-          files: techmujin_planning.pdf
+            Git tag から生成した PDF です。
+          files: ${{ steps.meta.outputs.pdf_output }}
           fail_on_unmatched_files: true
           generate_release_notes: false
           append_body: false
