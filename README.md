@@ -23,7 +23,17 @@ pnpm install
 pnpm build
 ```
 
-`output.pdf` が生成されます。
+`techmujin_planning.pdf` が生成されます。Git tag を切ったビルドでは `techmujin_planning-v1.0.0.pdf` のように version 付きで出力されます。
+
+### GitHub Actions での自動ビルド
+
+`main` ブランチへの push では GitHub Actions が `pnpm build` を実行して検証用 PDF を生成します。`v1.0.0` のような Git tag を push すると、生成された version 付き PDF を Release に公開します。
+
+最新版の PDF は、対応する Git tag の Release からダウンロードできます。
+
+Pull Request 作成時・更新時にも GitHub Actions が PDF をビルドし、workflow run の Artifact から対象ブランチ版 PDF をダウンロードできます。PR には別 workflow から最新 run へのリンクを含む bot コメントも自動で付きます。
+
+PR で生成される PDF には「下書き」の透かしが入り、main への push で公開される PDF には入りません。
 
 ### プレビュー
 

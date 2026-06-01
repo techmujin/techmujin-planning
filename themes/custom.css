@@ -4,6 +4,11 @@
   }
 }
 
+html,
+body {
+  font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+}
+
 /* 目次 */
 #toc ol {
   list-style: none;
