@@ -86,14 +86,51 @@ jobs:
             echo "- PR checks from this workflow contain the downloadable file."
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Build release notes
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        id: notes
+        run: |
+          CURRENT_TAG="${GITHUB_REF_NAME}"
+          PREV_TAG=$(git tag --list 'v*' --sort=-v:refname | grep -Fvx "${CURRENT_TAG}" | head -n 1 || true)
+
+          if [ -n "${PREV_TAG}" ]; then
+            COMMITS=$(git log --pretty='- %s (%h)' "${PREV_TAG}..${CURRENT_TAG}" || true)
+            COMPARE_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/${PREV_TAG}...${CURRENT_TAG}"
+            RANGE_TEXT="${PREV_TAG}..${CURRENT_TAG}"
+          else
+            COMMITS=$(git log --pretty='- %s (%h)' "${CURRENT_TAG}" || true)
+            COMPARE_URL=""
+            RANGE_TEXT="初回リリース"
+          fi
+
+          if [ -z "${COMMITS}" ]; then
+            COMMITS='- 変更なし'
+          fi
+
+          {
+            echo "release_body<<EOF"
+            echo "## ${CURRENT_TAG} 変更点"
+            echo ""
+            echo "- 差分範囲: ${RANGE_TEXT}"
+            if [ -n "${COMPARE_URL}" ]; then
+              echo "- Compare: ${COMPARE_URL}"
+            fi
+            echo ""
+            echo "### 変更点一覧"
+            echo "${COMMITS}"
+            echo ""
+            echo "### 添付ファイル"
+            echo "- ${{ steps.meta.outputs.pdf_output }}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Publish release asset
         if: github.event_name == 'push' && github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ steps.meta.outputs.version }}
-          body: |
-            Git tag から生成した PDF です。
+          body: ${{ steps.notes.outputs.release_body }}
           files: ${{ steps.meta.outputs.pdf_output }}
           fail_on_unmatched_files: true
           generate_release_notes: false
