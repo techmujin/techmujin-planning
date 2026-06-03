@@ -74,6 +74,10 @@ body {
   padding-right: 3em;
 }
 
+#toc li:has(> a[href$="00-cover.html"]) {
+  display: none;
+}
+
 #toc a {
   color: inherit;
   text-decoration: none;
