@@ -147,7 +147,7 @@ jobs:
         run: |
           mkdir -p _site
           cp site/index.html _site/index.html
-          cp "${PDF_OUTPUT_FILE}" _site/techmujin_planning-latest.pdf
+          cp "${PDF_OUTPUT_FILE}" "_site/${PDF_OUTPUT_FILE}"
           PUBLISHED_AT=$(gh api \
             "repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF_NAME}" \
             --jq '.published_at // .created_at')
@@ -155,7 +155,8 @@ jobs:
             --arg version "${GITHUB_REF_NAME}" \
             --arg publishedAt "${PUBLISHED_AT}" \
             --arg releaseUrl "${RELEASE_URL}" \
-            '{version: $version, publishedAt: $publishedAt, releaseUrl: $releaseUrl}' \
+            --arg pdfFile "${PDF_OUTPUT_FILE}" \
+            '{version: $version, publishedAt: $publishedAt, releaseUrl: $releaseUrl, pdfFile: $pdfFile}' \
             > _site/release.json
 
       - name: Upload GitHub Pages artifact
