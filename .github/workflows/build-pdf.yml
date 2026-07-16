@@ -17,8 +17,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: build-pdf-release
@@ -143,24 +141,22 @@ jobs:
       - name: Prepare GitHub Pages site
         if: github.event_name == 'push' && github.ref_type == 'tag'
         env:
+          GH_TOKEN: ${{ github.token }}
           PDF_OUTPUT_FILE: ${{ steps.meta.outputs.pdf_output }}
           RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.ref_name }}
         run: |
           mkdir -p _site
           cp site/index.html _site/index.html
           cp "${PDF_OUTPUT_FILE}" _site/techmujin_planning-latest.pdf
+          PUBLISHED_AT=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF_NAME}" \
+            --jq '.published_at // .created_at')
           jq -n \
             --arg version "${GITHUB_REF_NAME}" \
-            --arg publishedAt "$(date --utc +'%Y-%m-%dT%H:%M:%SZ')" \
+            --arg publishedAt "${PUBLISHED_AT}" \
             --arg releaseUrl "${RELEASE_URL}" \
             '{version: $version, publishedAt: $publishedAt, releaseUrl: $releaseUrl}' \
             > _site/release.json
-
-      - name: Configure GitHub Pages
-        if: github.event_name == 'push' && github.ref_type == 'tag'
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload GitHub Pages artifact
         if: github.event_name == 'push' && github.ref_type == 'tag'
@@ -172,11 +168,20 @@ jobs:
     if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
