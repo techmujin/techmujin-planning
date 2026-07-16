@@ -147,6 +147,7 @@ jobs:
         run: |
           mkdir -p _site
           cp site/index.html _site/index.html
+          sed -i "s|__PDF_FILE__|${PDF_OUTPUT_FILE}|g" _site/index.html
           cp "${PDF_OUTPUT_FILE}" "_site/${PDF_OUTPUT_FILE}"
           PUBLISHED_AT=$(gh api \
             "repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF_NAME}" \
