@@ -16,6 +16,7 @@
 <dt>想定参加者数</dt><dd>100名</dd>
 <dt>参加費</dt><dd>無料（予定）</dd>
 <dt>主催</dt><dd>テック無尽</dd>
+<dt>公式Webサイト</dt><dd><a href="https://techmujin.jp/">https://techmujin.jp/</a></dd>
 <dt>更新日</dt><dd>2026年8月10日</dd>
 <dt>バージョン</dt><dd>v2.0</dd>
 </dl>
