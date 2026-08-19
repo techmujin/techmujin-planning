@@ -21,3 +21,10 @@
 
 - GitHubリポジトリ：  
   https://github.com/techmujin/techmujin-planning
+
+本企画書の最新版は、以下の公開ページから閲覧・取得できます。
+
+<div class="latest-planning-link">
+<a href="https://techmujin.github.io/techmujin-planning/"><img src="img/latest-planning-qr.png" alt="テック無尽 イベント企画書 最新版のQRコード"></a>
+<p><a href="https://techmujin.github.io/techmujin-planning/">https://techmujin.github.io/techmujin-planning/</a></p>
+</div>

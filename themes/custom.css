@@ -9,6 +9,13 @@ body {
   font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
 }
 
+/* 本文の各節 */
+.level3 > h3 {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
 /* 表紙 */
 @page cover-page {
   margin: 0;
@@ -85,4 +92,26 @@ body {
 
 #toc a::after {
   content: leader(dotted) target-counter(attr(href url), page);
+}
+
+/* 最新版企画書へのリンク */
+.latest-planning-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem auto;
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+  text-align: center;
+}
+
+.latest-planning-link img {
+  inline-size: 42mm;
+  block-size: 42mm;
+}
+
+.latest-planning-link p {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
 }

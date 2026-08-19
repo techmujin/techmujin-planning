@@ -29,7 +29,7 @@ pnpm build
 
 `main` ブランチへの push では GitHub Actions が `pnpm build` を実行して検証用 PDF を生成します。`v1.0.0` のような Git tag を push すると、生成された version 付き PDF を Release に公開します。
 
-最新版の PDF は、対応する Git tag の Release からダウンロードできます。
+最新版の PDF は、[イベント企画書＜最新版＞ダウンロードページ](https://techmujin.github.io/techmujin-planning/) または対応する Git tag の Release からダウンロードできます。`v*` tag のリリースが生成されるたびに、ダウンロードページの PDF・バージョン・公開日時も自動更新されます。
 
 Pull Request 作成時・更新時にも GitHub Actions が PDF をビルドし、workflow run の Artifact から対象ブランチ版 PDF をダウンロードできます。PR には別 workflow から最新 run へのリンクを含む bot コメントも自動で付きます。
 
